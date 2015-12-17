@@ -2,8 +2,6 @@ MAJOR = 0
 MINOR = 0
 MICRO = 0
 SHLIB = libglob.so.$(MAJOR).$(MINOR).$(MICRO)
-CFLAGS ?= -O2
-LDFLAGS += -shared -Wl,-soname,libglob.so.$(MAJOR)
 OBJS = glob.o
 
 PREFIX ?= /usr/local
@@ -18,7 +16,7 @@ $(OBJS): %.o: %.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -fPIC -c $< -o $@
 
 libglob.so: $(OBJS)
-	$(CC) $^ -fPIC $(CFLAGS) $(LDFLAGS) -o $(SHLIB)
+	$(CC) $(CFLAGS) $(LDFLAGS) $^ -shared -Wl,-soname,libglob.so.$(MAJOR) -o $(SHLIB)
 	@-ln -sf $(SHLIB) libglob.so.$(MAJOR)
 	@-ln -sf $(SHLIB) libglob.so
 
